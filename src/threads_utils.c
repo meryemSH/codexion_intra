@@ -6,7 +6,7 @@
 /*   By: mseghrou <mseghrou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 12:05:15 by mseghrou          #+#    #+#             */
-/*   Updated: 2026/06/15 13:44:22 by mseghrou         ###   ########.fr       */
+/*   Updated: 2026/06/20 01:52:24 by mseghrou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	check_take_dongles(t_coder *coder)
 {
 	if (!take_dongles(coder))
 	{
-		smart_sleep(1000, coder->sim);
+		usleep(500);
 		return (0);
 	}
 	return (1);

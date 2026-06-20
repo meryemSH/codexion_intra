@@ -37,15 +37,14 @@ All arguments are mandatory. The scheduler must be exactly `fifo` or `edf` (case
 ### Examples
 
 ```bash
-# 5 coders, 800ms burnout, 200ms compile, 200ms debug, 200ms refactor,
-# 3 compiles required, 0ms cooldown, FIFO scheduler
-./codexion 5 800 200 200 200 3 0 fifo
+# 5 coders, 1500ms burnout, 200ms compile, 100ms debug, 100ms refactor, 5 compiles required, 50ms cooldown, FIFO scheduler
+./codexion 5 1500 200 100 100 5 50 fifo
 
 # Same but with EDF scheduler and a cooldown
-./codexion 4 1000 200 200 200 5 50 edf
+./codexion 5 1500 200 100 100 5 50 edf
 
 # Single coder (one dongle, infinite simulation if compiles_required = 0)
-./codexion 1 500 100 100 100 0 0 fifo
+./codexion 1 500 100 100 100 0 60 fifo
 ```
 
 ### Cleanup
@@ -108,4 +107,4 @@ Coders do not signal the monitor directly. Instead, the monitor polls shared sta
 
 **AI usage:**
 AI usage:
-Claude (claude.ai) was used for debugging assistance and generating this README.
+AI was used as a supplementary learning and occasionally to clarify concepts
