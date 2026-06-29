@@ -6,7 +6,7 @@
 /*   By: mseghrou <mseghrou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 12:05:15 by mseghrou          #+#    #+#             */
-/*   Updated: 2026/06/20 01:52:24 by mseghrou         ###   ########.fr       */
+/*   Updated: 2026/06/29 22:18:51 by mseghrou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,6 @@ int	check_take_dongles(t_coder *coder)
 
 int	do_compile_cycle(t_coder *coder, t_simulation *sim)
 {
-	pthread_mutex_lock(&coder->time_mutex);
-	coder->last_compile_time = get_time();
-	pthread_mutex_unlock(&coder->time_mutex);
 	log_action(sim, coder->id, "is compiling");
 	smart_sleep((long)sim->args.time_to_compile, sim);
 	pthread_mutex_lock(&coder->compile_mutex);

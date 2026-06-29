@@ -6,7 +6,7 @@
 /*   By: mseghrou <mseghrou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 11:53:20 by mseghrou          #+#    #+#             */
-/*   Updated: 2026/06/16 14:20:39 by mseghrou         ###   ########.fr       */
+/*   Updated: 2026/06/29 21:33:34 by mseghrou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@ static int	check_burnout(t_simulation *sim)
 	i = 0;
 	while (i < sim->args.number_of_coders)
 	{
+		if (coder_finished(&sim->coders[i]))
+		{
+			i++;
+			continue ;
+		}
 		pthread_mutex_lock(&sim->coders[i].time_mutex);
 		over = get_time() - sim->coders[i].last_compile_time;
 		pthread_mutex_unlock(&sim->coders[i].time_mutex);
@@ -64,6 +69,7 @@ void	*monitor_routine(void *arg)
 	sim = (t_simulation *)arg;
 	while (1)
 	{
+		usleep(500);
 		if (!get_isrunning(sim))
 			return (NULL);
 		if (check_burnout(sim))

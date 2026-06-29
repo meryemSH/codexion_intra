@@ -6,7 +6,7 @@
 /*   By: mseghrou <mseghrou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 11:52:54 by mseghrou          #+#    #+#             */
-/*   Updated: 2026/06/16 11:06:35 by mseghrou         ###   ########.fr       */
+/*   Updated: 2026/06/29 22:19:09 by mseghrou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	is_my_turn(t_coder *c, t_dongle *d)
 	return (d->queue.data[0].coder_id == c->id);
 }
 
-int	is_already_waiting(t_dongle *d, int id)
+static int	is_already_waiting(t_dongle *d, int id)
 {
 	int	i;
 
@@ -31,6 +31,26 @@ int	is_already_waiting(t_dongle *d, int id)
 		i++;
 	}
 	return (0);
+}
+
+void	register_waiter(t_coder *c)
+{
+	t_waiter	w;
+
+	w.coder_id = c->id;
+	w.value = c->wait_value;
+	w.tie_id = c->id;
+	pthread_mutex_lock(&c->left_dongle->mutex);
+	if (!is_already_waiting(c->left_dongle, c->id))
+		heap_push(&c->left_dongle->queue, w);
+	pthread_mutex_unlock(&c->left_dongle->mutex);
+	if (c->left_dongle != c->right_dongle)
+	{
+		pthread_mutex_lock(&c->right_dongle->mutex);
+		if (!is_already_waiting(c->right_dongle, c->id))
+			heap_push(&c->right_dongle->queue, w);
+		pthread_mutex_unlock(&c->right_dongle->mutex);
+	}
 }
 
 int	try_take_dongle(t_coder *c, t_dongle *d)
@@ -48,7 +68,7 @@ int	try_take_dongle(t_coder *c, t_dongle *d)
 	if (!is_already_waiting(d, c->id))
 	{
 		waiter.coder_id = c->id;
-		waiter.value = get_waiter_value(c);
+		waiter.value = c->wait_value;
 		waiter.tie_id = c->id;
 		heap_push(&d->queue, waiter);
 	}

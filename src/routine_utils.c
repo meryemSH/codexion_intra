@@ -6,7 +6,7 @@
 /*   By: mseghrou <mseghrou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 11:53:29 by mseghrou          #+#    #+#             */
-/*   Updated: 2026/06/16 14:57:08 by mseghrou         ###   ########.fr       */
+/*   Updated: 2026/06/29 22:19:21 by mseghrou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,20 @@ static t_dongle	*second_dongle(t_coder *c)
 	return (c->left_dongle);
 }
 
+static void	abort_take_dongle(t_coder *c, t_dongle *d)
+{
+	t_waiter	waiter;
+
+	pthread_mutex_lock(&d->mutex);
+	d->is_taken = 0;
+	d->release_time = 0;
+	waiter.coder_id = c->id;
+	waiter.value = c->wait_value;
+	waiter.tie_id = c->id;
+	heap_push(&d->queue, waiter);
+	pthread_mutex_unlock(&d->mutex);
+}
+
 int	take_dongles(t_coder *c)
 {
 	t_dongle	*first;
@@ -43,11 +57,14 @@ int	take_dongles(t_coder *c)
 		return (0);
 	if (!try_take_dongle(c, second))
 	{
-		release_dongle(c->sim, first);
+		abort_take_dongle(c, first);
 		return (0);
 	}
 	log_action(c->sim, c->id, "has taken a dongle");
 	log_action(c->sim, c->id, "has taken a dongle");
+	pthread_mutex_lock(&c->time_mutex);
+	c->last_compile_time = get_time();
+	pthread_mutex_unlock(&c->time_mutex);
 	return (1);
 }
 

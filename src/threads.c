@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Meryem <Meryem@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mseghrou <mseghrou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 11:53:35 by mseghrou          #+#    #+#             */
-/*   Updated: 2026/06/16 06:37:28 by Meryem           ###   ########.fr       */
+/*   Updated: 2026/06/29 20:29:11 by mseghrou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ void	*routine(void *arg)
 	{
 		if (coder_finished(coder))
 			return (NULL);
-		if (!check_take_dongles(coder))
-			continue ;
+		coder->wait_value = get_waiter_value(coder);
+		register_waiter(coder);
+		while (get_isrunning(sim) && !check_take_dongles(coder));
 		if (!get_isrunning(sim))
 		{
 			release_both_dongles(sim, coder);

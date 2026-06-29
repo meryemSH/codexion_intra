@@ -6,7 +6,7 @@
 /*   By: mseghrou <mseghrou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 11:53:59 by mseghrou          #+#    #+#             */
-/*   Updated: 2026/06/16 12:52:12 by mseghrou         ###   ########.fr       */
+/*   Updated: 2026/06/29 22:19:35 by mseghrou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ typedef struct s_coder
 	int						id;
 	int						compile_count;
 	long					last_compile_time;
-	int						is_alive;
+	long					wait_value;
+	// t_dongle	*holding_dongle;
 	t_dongle				*left_dongle;
 	t_dongle				*right_dongle;
 	pthread_t				thread;
@@ -119,5 +120,6 @@ int							take_dongles(t_coder *c);
 void						remove_waiter(t_dongle *d, int id);
 int							coder_finished(t_coder *c);
 void						smart_sleep(long time, t_simulation *sim);
+void	register_waiter(t_coder *c);
 
 #endif
